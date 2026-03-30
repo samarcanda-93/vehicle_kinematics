@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vehicle-kinematics"
+version = "0.1.0"
+description = "Vehicle kinematics take-home task."
+requires-python = ">=3.10"
+dependencies = [
+    "numpy",
+    "matplotlib",
+]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]

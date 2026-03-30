@@ -5,3 +5,23 @@ outputs/*
 # Python cache
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# IDE / OS files
+.vscode/
+.idea/
+.DS_Store
+
+# Packaging artifacts
+*.egg-info/
+build/
+dist/
