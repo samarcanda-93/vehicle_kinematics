@@ -1,0 +1,7 @@
+pek_task.pdf
+outputs/*
+!outputs/.gitkeep
+
+# Python cache
+__pycache__/
+*.pyc
