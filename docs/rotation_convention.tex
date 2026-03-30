@@ -1,0 +1,90 @@
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\textbf{Reference frame and angle conventions}
+
+We define a right-handed rover-fixed coordinate frame attached to the moving plane:
+\begin{itemize}
+  \item $x_v$: forward direction of the vehicle,
+  \item $y_v$: lateral axis (pointing to the left),
+  \item $z_v$: normal to the rover plane, pointing upward toward the GNSS module.
+\end{itemize}
+
+The GNSS module is located at a fixed height $h = 1500\ \text{mm}$ along the $z_v$ axis
+from the rover plane.
+
+Roll and pitch are defined according to the task statement:
+\begin{itemize}
+  \item \textbf{Roll} ($\phi$): rotation about $x_v$, positive when the right side of
+  the vehicle is lower than the left.
+  \item \textbf{Pitch} ($\theta$): rotation about $y_v$, positive when the front of the
+  vehicle is lower than the rear.
+\end{itemize}
+Positive roll corresponds to the orientation when the right side of the vehicle is being
+lower than the left side. Positive pitch corresponds to the orientation when the front
+part of the vehicle is being lower than the rear part. This implies that all rotations
+follow the right-hand rule.
+
+\textbf{Rotation convention}
+
+The rover orientation is constructed using intrinsic (body-fixed) rotations:
+\begin{itemize}
+  \item first a roll rotation about $x_v$,
+  \item then a pitch rotation about the updated $y_v$ axis.
+\end{itemize}
+
+This rotation order is assumed, as it is not explicitly specified in the task statement.
+
+\textbf{Projection of GNSS module on the vehicule plane}
+Define a frame of reference v at the base of the post. 
+The GNSS module position when the vehicle is flat is simply:
+\begin{equation}
+\vec{h}_v = (0, 0, h)
+\end{equation}
+In this frame of reference, a roll rotation $\phi$ around the x-axis is given by the operator
+\begin{equation}
+  R_x(\phi)=
+\begin{bmatrix}
+1 & 0 & 0 \\
+0 & \cos\phi & -\sin\phi \\
+0 & \sin\phi & \cos\phi
+\end{bmatrix}
+\end{equation}
+which, applied to the vector representing the GNSS module of the vehicle, gives
+\begin{equation}
+R_x(\phi)\vec{h}_v=(0, -h\sin\phi, h\cos\phi)
+\end{equation}
+This correctly shows that positive roll tilts the z-axis to smaller y, meaning the right side is lower than the left one.
+The pitch rotation can be represented instead by the operator:
+\begin{equation}
+R_y(\theta)=
+\begin{bmatrix}
+\cos\theta & 0 & \sin\theta \\
+0 & 1 & 0 \\
+-\sin\theta & 0 & \cos\theta
+\end{bmatrix}
+\end{equation}
+which, applied to the GNSS post vector gives
+\begin{equation}
+R_y(\theta)\vec{h}_v=(h\sin\theta, 0, h\cos\theta)
+\end{equation}
+This correctly shows that positive pitch tilts the z-axis to larger x, meaning the front part of the vehicle is being lower
+than the rear part.
+
+Applying both operations (roll, then pitch) to the post vector gives:
+\begin{equation}
+  R_y(\theta)R_x(\phi)\vec{h}_v=(h\sin\theta\cos\phi,\,-h\sin\phi,\,h\cos\theta\cos\phi)
+\end{equation}
+
+The data gives us the coordinate of the GNSS (G) module in the word frame of reference: $(x_G, y_G, z_G)$
+To find the base of the post, we simply consider that the coordinate $(x_G, y_G, z_G) = (x_P, y_P, z_P) + (h\sin\theta\cos\phi,\,-h\sin\phi,\,h\cos\theta\cos\phi)$
+From this formula, we read out the projection of the post on the vehicle:
+\begin{equation}
+  (x_P, y_P) =  (x_G- h\sin\theta\cos\phi, y_G+ h\sin\phi)
+\end{equation}
+
+
+
+\end{document}
