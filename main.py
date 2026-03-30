@@ -1,6 +1,11 @@
 from pathlib import Path
 
-from vehicle_kinematics import calc_GNSS_projection, calc_velocity, parse_txt
+from vehicle_kinematics import (
+    calc_GNSS_projection,
+    calc_velocity,
+    parse_txt,
+    save_plots,
+)
 
 if __name__ == "__main__":
     # TODO: Add CLI file input. or scan all data/
@@ -17,3 +22,5 @@ if __name__ == "__main__":
     headings_deg = [velocity.heading_deg for velocity in velocities]
     print(velocities[0])
     print(headings_deg[0])
+
+    save_plots(parsed_data, projected_GNSS, velocities)
