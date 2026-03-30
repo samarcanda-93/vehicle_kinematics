@@ -38,7 +38,7 @@ The rover orientation is constructed using intrinsic (body-fixed) rotations:
 This rotation order is assumed, as it is not explicitly specified in the task statement.
 
 \textbf{Projection of GNSS module on the vehicule plane}
-Define a frame of reference v at the base of the post. 
+Define a frame of reference v at the base of the post.
 The GNSS module position when the vehicle is flat is simply:
 \begin{equation}
 \vec{h}_v = (0, 0, h)
@@ -85,6 +85,8 @@ From this formula, we read out the projection of the post on the vehicle:
   (x_P, y_P) =  (x_G- h\sin\theta\cos\phi, y_G+ h\sin\phi)
 \end{equation}
 
+It is interesting to notice that, for small angles (smooth movement), the rotation order
+becomes a second-order effect.
 
 
 \end{document}
