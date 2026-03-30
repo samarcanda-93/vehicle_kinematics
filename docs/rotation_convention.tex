@@ -1,11 +1,15 @@
 \documentclass{article}
 \usepackage{amsmath}
+\title{Rotation Convention and Formula Derivations}
+\author{Giacomo Accorto}
+\date{\today}
 
 \begin{document}
+\maketitle
 
-\textbf{Reference frame and angle conventions}
+\section{Reference Frame and Angle Conventions}
 
-We define a right-handed rover-fixed coordinate frame attached to the moving plane:
+We define a right-handed, vehicle-fixed, coordinate frame attached to the moving plane:
 \begin{itemize}
   \item $x_v$: forward direction of the vehicle,
   \item $y_v$: lateral axis (pointing to the left),
@@ -18,16 +22,15 @@ from the rover plane.
 Roll and pitch are defined according to the task statement:
 \begin{itemize}
   \item \textbf{Roll} ($\phi$): rotation about $x_v$, positive when the right side of
-  the vehicle is lower than the left.
+  the vehicle is lower than the left. Assume
+  $-\frac{\pi}{2} < \phi < \frac{\pi}{2}$.
   \item \textbf{Pitch} ($\theta$): rotation about $y_v$, positive when the front of the
-  vehicle is lower than the rear.
+  vehicle is lower than the rear. Assume
+  $-\frac{\pi}{2} < \theta < \frac{\pi}{2}$.
 \end{itemize}
-Positive roll corresponds to the orientation when the right side of the vehicle is being
-lower than the left side. Positive pitch corresponds to the orientation when the front
-part of the vehicle is being lower than the rear part. This implies that all rotations
-follow the right-hand rule.
+This implies that all rotations follow the right-hand rule.
 
-\textbf{Rotation convention}
+\subsection{Rotation Convention}
 
 The rover orientation is constructed using intrinsic (body-fixed) rotations:
 \begin{itemize}
@@ -36,8 +39,13 @@ The rover orientation is constructed using intrinsic (body-fixed) rotations:
 \end{itemize}
 
 This rotation order is assumed, as it is not explicitly specified in the task statement.
+It is interesting to notice that, for small angles (smooth movement), the rotation order
+becomes a second-order effect ($R_\theta R_\phi \approx R_\phi R_\theta$ ).
 
-\textbf{Projection of GNSS module on the vehicule plane}
+\section{Projection of the GNSS Module on the Vehicle Plane}
+
+\subsection{Pitch Rotation}
+
 Define a frame of reference v at the base of the post.
 The GNSS module position when the vehicle is flat is simply:
 \begin{equation}
@@ -57,6 +65,9 @@ which, applied to the vector representing the GNSS module of the vehicle, gives
 R_x(\phi)\vec{h}_v=(0, -h\sin\phi, h\cos\phi)
 \end{equation}
 This correctly shows that positive roll tilts the z-axis to smaller y, meaning the right side is lower than the left one.
+
+\subsection{Pitch Rotation}
+
 The pitch rotation can be represented instead by the operator:
 \begin{equation}
 R_y(\theta)=
@@ -73,6 +84,8 @@ R_y(\theta)\vec{h}_v=(h\sin\theta, 0, h\cos\theta)
 This correctly shows that positive pitch tilts the z-axis to larger x, meaning the front part of the vehicle is being lower
 than the rear part.
 
+\subsection{Combined Rotation and Projection}
+
 Applying both operations (roll, then pitch) to the post vector gives:
 \begin{equation}
   R_y(\theta)R_x(\phi)\vec{h}_v=(h\sin\theta\cos\phi,\,-h\sin\phi,\,h\cos\theta\cos\phi)
@@ -85,8 +98,32 @@ From this formula, we read out the projection of the post on the vehicle:
   (x_P, y_P) =  (x_G- h\sin\theta\cos\phi, y_G+ h\sin\phi)
 \end{equation}
 
-It is interesting to notice that, for small angles (smooth movement), the rotation order
-becomes a second-order effect.
+\section{Velocity and Heading Estimation}
+
+Once the GNSS module projection on the moving plane has been computed, the vehicle
+heading can be calculate from the direction of motion (velocity) in the world frame. Let
+$(x_P(t), y_P(t))$ be the projected point trajectory. Then the planar velocity is
+\begin{equation}
+  \vec{v}(t) =
+  \begin{pmatrix}
+    v_x(t) \\
+    v_y(t)
+  \end{pmatrix}
+\end{equation}
+where $v_x(t)$ and $v_y(t)$ are approximated numerically from neighboring data.
+
+Assuming the vehicle moves smoothly forward, the heading angle is taken as the angle
+of this planar velocity vector:
+\begin{equation}
+  \psi(t) = \operatorname{atan2}\bigl(v_y(t), v_x(t)\bigr)
+\end{equation}
+where $\operatorname{atan2}(y,x)$ is the quadrant-aware $\arctan$, the angle $\psi \in (-\pi,\pi]$ such that
+\[
+\cos\psi = \frac{x}{\sqrt{x^2+y^2}},
+\qquad
+\sin\psi = \frac{y}{\sqrt{x^2+y^2}}.
+\]
+This gives the heading in the world frame, measured from the positive $x$-axis.
 
 
 \end{document}

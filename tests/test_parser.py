@@ -5,8 +5,7 @@ import pytest
 from vehicle_kinematics.models import GNSSDataRow
 from vehicle_kinematics.parser import parse, validate_gnss_data
 
-# TODO: make path independent from where test is run. makefile? __file__?
-test_data_path = Path("data/input_coordinates.txt")
+test_data_path = Path(__file__).resolve().parent.parent / "data" / "input_coordinates.txt"
 
 
 def test_parser_txt():

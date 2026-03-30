@@ -1,6 +1,6 @@
-# TODO: Add different file input format. csv, json
+# TODO: Update README
 
-# TODO: throw exceptions where appropriate
+# TODO: Update tex companion
 
 1. Parse the GPS data input into a data structure. Dataclass, tuple, namedtuple.
 2. Build a list with those records.
@@ -36,3 +36,5 @@
   positions, a heading-over-time plot, a roll/pitch-over-time plot, and optionally a
   small animation of the moving plane, antenna post, and projected point. colormaps
   seems cool here.
+- heading is computed from the direction of the planar velocity vector
+  this assumes motion direction aligns with vehicle heading
