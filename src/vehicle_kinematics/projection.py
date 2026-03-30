@@ -1,9 +1,11 @@
 import numpy as np
 
-from vehicle_kinematics.models import GNSSDataRow
+from vehicle_kinematics.models import GNSSDataRow, GNSSProjectedDataRow
 
 
-def calc_GNSS_projection(data: list[GNSSDataRow], h: float):
+def calc_GNSS_projection(
+    data: list[GNSSDataRow], h: float
+) -> list[GNSSProjectedDataRow]:
     xG = np.array([data_row.x_mm for data_row in data], dtype=float)
     yG = np.array([data_row.y_mm for data_row in data], dtype=float)
     roll_deg = np.array([data_row.roll_deg for data_row in data], dtype=float)
@@ -15,4 +17,7 @@ def calc_GNSS_projection(data: list[GNSSDataRow], h: float):
     xP = xG - h * np.sin(pitch_rad) * np.cos(roll_rad)
     yP = yG + h * np.sin(roll_rad)
 
-    return np.column_stack((xP, yP))
+    return [
+        GNSSProjectedDataRow(time_s=float(row.time_s), x_mm=float(xp), y_mm=float(yp))
+        for row, xp, yp in zip(data, xP, yP)
+    ]
