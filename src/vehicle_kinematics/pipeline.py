@@ -2,7 +2,7 @@ import csv
 from pathlib import Path
 
 from vehicle_kinematics.kinematics import calc_GNSS_projection, calc_velocity
-from vehicle_kinematics.models import GNSSDataRow, GNSSProjectedDataRow, VelocityDataRow
+from vehicle_kinematics.models import GNSSProjectedDataRow, VelocityDataRow
 from vehicle_kinematics.parser import parse
 from vehicle_kinematics.plotting import save_plots
 
@@ -24,17 +24,13 @@ def save_heading_csv(data: list[VelocityDataRow]) -> None:
 
     with output_path.open("w", encoding="utf-8", newline="") as ofile:
         writer = csv.writer(ofile)
-        writer.writerow(["time_s", "vx_mm_s", "vy_mm_s", "speed_mm_s", "heading_deg"])
+        writer.writerow(["time_s", "heading_deg"])
         for row in data:
-            writer.writerow(
-                [row.time_s, row.vx_mm_s, row.vy_mm_s, row.speed_mm_s, row.heading_deg]
-            )
+            writer.writerow([row.time_s, row.heading_deg])
 
 
 # TODO: Think about refactoring into a class.
-def run_pipeline(
-    data_path: Path, h: float = 1500.0
-) -> tuple[list[GNSSDataRow], list[GNSSProjectedDataRow], list[VelocityDataRow]]:
+def run_pipeline(data_path: Path, h: float = 1500.0) -> None:
     parsed_data = parse(data_path)
     projected_data = calc_GNSS_projection(parsed_data, h)
     velocity_data = calc_velocity(projected_data)
@@ -42,5 +38,3 @@ def run_pipeline(
     save_projection_csv(projected_data)
     save_heading_csv(velocity_data)
     save_plots(parsed_data, projected_data, velocity_data)
-
-    return parsed_data, projected_data, velocity_data

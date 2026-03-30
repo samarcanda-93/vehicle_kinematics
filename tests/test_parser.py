@@ -80,7 +80,7 @@ def test_parser_rejects_header_after_data(tmp_path: Path):
         encoding="utf-8",
     )
 
-    with pytest.raises(ValueError, match="Unexpected header at line 2"):
+    with pytest.raises(ValueError, match="Non-numeric value at line 2"):
         parse(data_path)
 
 
@@ -93,7 +93,7 @@ def test_parser_rejects_repeated_header_after_header(tmp_path: Path):
         encoding="utf-8",
     )
 
-    with pytest.raises(ValueError, match="Unexpected header at line 3"):
+    with pytest.raises(ValueError, match="Non-numeric value at line 3"):
         parse(data_path)
 
 

@@ -13,7 +13,7 @@ def validate_gnss_data(data: list[GNSSDataRow]) -> None:
 
 def parse(ifile_path: Path) -> list[GNSSDataRow]:
     """Parse GNSS rows from a CSV-like file with optional header columns.
-    If no header is present defaults to DEFAULT_HEADER. Otherwise read the header and
+    If no header is present, defaults to DEFAULT_HEADER. Otherwise read the header and
     dispatch data to the correct field. Header entries are limited to those of
     DEFAULT_HEADER, but can be scrambled. A header is only allowed on the first line."""
     with ifile_path.open("r", encoding="utf-8") as ifile:

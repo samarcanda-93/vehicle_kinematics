@@ -78,7 +78,7 @@ def save_plots(
     projected_data: list[GNSSProjectedDataRow],
     velocity_data: list[VelocityDataRow],
 ) -> None:
-    output_dir = Path("outputs")
+    output_dir = Path("output")
     output_dir.mkdir(exist_ok=True)
 
     plot_trajectory(raw_data, projected_data).savefig(output_dir / "trajectory.png")
