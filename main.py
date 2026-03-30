@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from vehicle_kinematics.parser import parse_txt
+from vehicle_kinematics.projection import calc_GNSS_projection
 
 if __name__ == "__main__":
     # TODO: Add CLI file input. or scan all data/
@@ -9,3 +10,5 @@ if __name__ == "__main__":
 
     print(f"Parsed {len(parsed_data)} samples form {data_path}.")
     print(parsed_data[0])
+
+    projected_GNSS = calc_GNSS_projection(parsed_data, h=1500)
