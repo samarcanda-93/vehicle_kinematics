@@ -8,4 +8,4 @@ if __name__ == "__main__":
     data_path = Path("data/input_coordinates.txt")
     run_pipeline(data_path, h=1500.0)
 
-# TODO: Handle edge cases
+    # TODO: Add docstring to functions.

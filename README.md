@@ -1,7 +1,5 @@
 # TODO: Update README
 
-# TODO: Update tex companion
-
 1. Parse the GPS data input into a data structure. Dataclass, tuple, namedtuple.
 2. Build a list with those records.
 3. Build a projector of the post on the xy space
