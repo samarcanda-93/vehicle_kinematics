@@ -184,7 +184,7 @@ def save_trajectory_gif(
     ax.set_title("2D Trajectory")
     ax.set_xlabel("x [mm]")
     ax.set_ylabel("y [mm]")
-    ax.axis("equal")
+    ax.set_aspect("equal", adjustable="box")
     ax.grid(True)
     legend_handles = [
         Line2D([0], [0], color="0.8", linewidth=1.5),
