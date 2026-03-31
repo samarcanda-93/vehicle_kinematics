@@ -37,23 +37,22 @@ The implementation is split into modules:
 - `parser.py`: input parsing and validation that timestamps are strictly increasing
 - `kinematics.py`: kinematics calculations
 - `plotting.py`: plots
-- `pipeline.py`: algorithm orchestration and output production
-- `main.py`: simple client that feeds data/input_coordinates.txt to the pipeline
-
-# TODO: comment the oo design
+- `pipeline.py`: algorithm orchestration and output production from normalized input data
+- `main.py`: simple client that reads `data/input_coordinates.txt`, parses it, and feeds the resulting data to the pipeline
 
 The `main.py` script produces:
 
 - `output/GNSS_module_projection.csv`
 - `output/vehicle_heading.csv`
 - `output/trajectory.png`
+- `output/trajectory.gif`
 - `output/heading.png`
 - `output/roll_pitch.png`
 - `output/velocity.png`
 
 ## Testing
 
-A `pytest` suite includes both unit-tests and an e2e test, located in `test/`.
+A `pytest` suite includes both unit tests and an end-to-end test, located in `tests/`.
 
 ## Requirements
 

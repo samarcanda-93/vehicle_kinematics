@@ -6,16 +6,17 @@ DEFAULT_HEADER = ("time_s", "x_mm", "y_mm", "roll_deg", "pitch_deg")
 
 
 def validate_gnss_data(data: list[GNSSDataRow]) -> None:
-    """Verify that time is strictly growing"""
+    """Check that samples are ordered by increasing time."""
     if any(curr.time_s <= prev.time_s for prev, curr in zip(data, data[1:])):
         raise ValueError("time_s values must be strictly increasing")
 
 
 def parse(ifile_path: Path) -> list[GNSSDataRow]:
-    """Parse GNSS rows from a CSV-like file with optional header columns.
-    If no header is present, defaults to DEFAULT_HEADER. Otherwise read the header and
-    dispatch data to the correct field. Header entries are limited to those of
-    DEFAULT_HEADER, but can be scrambled. A header is only allowed on the first line."""
+    """Parse GNSS samples from a csv file.
+    The file could start with a header containing the expected field names in any order.
+    If no header is present, the parser assumes the default field order defined by
+    DEFAULT_HEADER.
+    """
     with ifile_path.open("r", encoding="utf-8") as ifile:
         parsed_data: list[GNSSDataRow] = []
         header = DEFAULT_HEADER

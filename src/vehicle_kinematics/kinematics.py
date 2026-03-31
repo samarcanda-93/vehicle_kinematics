@@ -10,6 +10,7 @@ from vehicle_kinematics.models import (
 def calc_GNSS_projection(
     data: list[GNSSDataRow], h: float
 ) -> list[GNSSProjectedDataRow]:
+    """Project the GNSS module position onto the vehicle plane."""
     xG = np.array([data_row.x_mm for data_row in data], dtype=float)
     yG = np.array([data_row.y_mm for data_row in data], dtype=float)
     roll_deg = np.array([data_row.roll_deg for data_row in data], dtype=float)
@@ -28,6 +29,7 @@ def calc_GNSS_projection(
 
 
 def calc_velocity(data: list[GNSSProjectedDataRow]) -> list[VelocityDataRow]:
+    """Calculate velocity vector and heading from projected GNSS positions."""
     if not data:
         return []
 
@@ -47,9 +49,12 @@ def calc_velocity(data: list[GNSSProjectedDataRow]) -> list[VelocityDataRow]:
     y = np.array([data_row.y_mm for data_row in data], dtype=float)
     time = np.array([data_row.time_s for data_row in data], dtype=float)
 
+    # calculate time derivatives
     v_x = np.gradient(x, time)
     v_y = np.gradient(y, time)
+    # norm is the forward speed
     speed = np.sqrt(v_x * v_x + v_y * v_y)
+    # arctan2 is defined on all quadrants
     heading = np.arctan2(v_y, v_x)
 
     return [
