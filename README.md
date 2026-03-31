@@ -1,38 +1,89 @@
-# TODO: Update README
+# Vehicle Kinematics
 
-1. Parse the GPS data input into a data structure. Dataclass, tuple, namedtuple.
-2. Build a list with those records.
-3. Build a projector of the post on the xy space
-4. Calculate velocity vector (moving direction)
+**Author:** G. Accorto
+
+---
+
+The program takes the measurements of a GNSS module mounted on top of a rigid post,
+attached to a moving vehicle (represented by a 2D plane). It calculates the projection of its coordinates onto the moving plane and the vehicle heading over time. The input consists of timestamped GNSS
+2D coordinates, roll, and pitch in the world frame. The output includes visualization plots, together with the calculated quantities.
 
 ## Assumptions
 
-- x_mm, y_mm coordinates are the GNSS module position in a **fixed** 2D world frame of
-  reference.
-- The vehicle moves forward smoothly
-- The GNSS module is mounted on a rigid post and remains constantly at h= 1500[mm]
-  height above moving plain, meaning that The post does not bend, flex, or vibrate
-  significantly.
-- The post is constantly perpendicular to the moving plane, and its base lies in the
-  moving plane.
-- The vehicle body can be approximated locally as a rigid moving plane. This means that
-  GNSS module is low enough to see the robot as a plane. Similar to the f = mg flat
-  earth approximation concept.
-- roll_deg describes lateral tilt of the vehicle.
-- Positive roll means the right side of the vehicle is lower than the left side.
-- pitch_deg describes longitudinal tilt of the vehicle.
-- Positive pitch means the front of the vehicle is lower than the rear.
-- Roll and pitch are accurate and synchronized with the GNSS position timestamps (no transmission delay)
-- The terrain may be rugged, but the motion is smooth enough that heading estimation
-  from neighboring samples is meaningful.
-- We solve the problem in 2D world coordinates plus attitude angles, without modeling
-  full 3D terrain geometry beyond the local moving plane. The vehicle is modeled as a
-  rigid body with a single local moving plane. The local terrain/support plane is
-  assumed to coincide with the vehicle moving plane at each time.
-- Movement is smooth, so that calculated velocity (heading) and gps data are coherent
-- generate a 2D trajectory plot comparing raw GNSS positions with projected post-foot
-  positions, a heading-over-time plot, a roll/pitch-over-time plot, and optionally a
-  small animation of the moving plane, antenna post, and projected point. colormaps
-  seems cool here.
-- heading is computed from the direction of the planar velocity vector
-  this assumes motion direction aligns with vehicle heading
+- `x_mm`, `y_mm` are the GNSS module position in a fixed 2D world frame.
+- The vehicle body can be approximated locally as a rigid moving plane. This is valid for low enough values of the post height.
+- The GNSS module is at constant height `h = 1500 mm` above the moving plane, and the post remains perpendicular to the moving plane at each time.
+- Positive roll (rotation around the longitudinal axis) means the right side of the vehicle is lower than the left side, while positive pitch (rotation around the lateral axis) means the front of the vehicle is lower than the rear.
+- Motion is smooth, so that heading can be calculated from neighboring data. In fact, heading is calculated from the vehicle velocity vector, and it represents the motion direction.
+- A moving right-handed frame of reference is defined at the base of the post, with the x-axis aligned with the instantaneous heading (velocity vector, direction of motion). All rotations follow the right hand rule.
+- Data is assumed to imply roll first, then pitch. In this frame of reference and with these assumptions, the vehicle yaw is constantly zero.
+
+- The parser expects five comma-separated fields: `time_s`, `x_mm`, `y_mm`, `roll_deg`, `pitch_deg`.
+- A file header is optional. If present, it must contain all the expected field names. Fields columns can be shuffled, as long as a header labels them properly.
+
+## Implementation
+
+The main algorithm can be split in two steps:
+
+1. Parse a CSV file containing the GNSS module data into records.
+2. Project the GNSS module position onto the moving plane and use the result to calculate velocity vector and heading.
+
+The geometric derivation and the rotation/sign conventions used by the implementation
+are explained in detail in [docs/rotation_convention.pdf](docs/rotation_convention.pdf).
+
+The implementation is split into modules:
+
+- `models.py`: data containers
+- `parser.py`: input parsing and validation that timestamps are strictly increasing
+- `kinematics.py`: kinematics calculations
+- `plotting.py`: plots
+- `pipeline.py`: algorithm orchestration and output production
+- `main.py`: simple client that feeds data/input_coordinates.txt to the pipeline
+
+# TODO: comment the oo design
+
+The `main.py` script produces:
+
+- `output/GNSS_module_projection.csv`
+- `output/vehicle_heading.csv`
+- `output/trajectory.png`
+- `output/heading.png`
+- `output/roll_pitch.png`
+- `output/velocity.png`
+
+## Testing
+
+A `pytest` suite includes both unit-tests and an e2e test, located in `test/`.
+
+## Requirements
+
+- Python 3.10 or newer
+
+### Dependencies:
+
+- `numpy`
+- `matplotlib`
+- `pytest`
+
+Create a local virtual environment at `.venv/` and install the
+dependencies before running the program or the tests.
+
+## Build and Run
+
+### Build and run the program
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -e .
+python main.py
+```
+
+### Build and run tests
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -e .
+python -m pytest tests
+```
