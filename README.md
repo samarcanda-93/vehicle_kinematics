@@ -18,6 +18,7 @@ attached to a moving vehicle (represented by a 2D plane). It calculates the proj
 - A moving right-handed frame of reference is defined at the base of the post, with the x-axis aligned with the instantaneous heading (velocity vector, direction of motion). All rotations follow the right hand rule.
 - Data is assumed to imply roll first, then pitch. In this frame of reference and with these assumptions, the vehicle yaw is constantly zero.
 
+- It is up to the client to create the appropriate data model which is fed to the algorithm pipeline. The `main.py` test client reads the data from a file, parse it into a list of `GNSSDataRow` dataclasses, and pass this to the main algorithm.
 - The parser expects five comma-separated fields: `time_s`, `x_mm`, `y_mm`, `roll_deg`, `pitch_deg`.
 - A file header is optional. If present, it must contain all the expected field names. Fields columns can be shuffled, as long as a header labels them properly.
 
